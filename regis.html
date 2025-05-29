@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration & Login Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    label {
+      font-weight: bold;
+      color: #555;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .toggle {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 id="form-title">Login</h2>
+
+  <!-- Login Form -->
+  <form id="login-form" action="loginconnect.php" method="POST">
+    <div class="form-group">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Registration Form -->
+  <form id="register-form" action="connect.php" method="POST" style="display: none;">
+    <div class="form-group">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" required>
+    </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" required>
+    </div>
+    <div class="form-group">
+      <label for="register-email">Email</label>
+      <input type="email" id="register-email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="number" id="phone" name="phone" required>
+    </div>
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="" disabled selected>Select your gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="register-password">Password</label>
+      <input type="password" id="register-password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" required>
+    </div>
+    <div class="form-group">
+      <label for="weather">Weather</label>
+      <input type="text" id="weather" name="weather" readonly>
+    </div>
+    <button type="button" onclick="getWeather()">Get Weather</button>
+    <button type="submit">Register</button>
+  </form>
+
+  <p class="toggle" onclick="toggleForms()">Switch to Register</p>
+</div>
+
+<script>
+  function toggleForms() {
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+    const title = document.getElementById("form-title");
+    const toggleText = document.querySelector(".toggle");
+
+    if (loginForm.style.display === "none") {
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+      title.innerText = "Login";
+      toggleText.innerText = "Switch to Register";
+    } else {
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+      title.innerText = "Register";
+      toggleText.innerText = "Switch to Login";
+    }
+  }
+
+  function getWeather() {
+    const location = document.getElementById("location").value;
+
+    if (!location) {
+      alert("Please enter a location first.");
+      return;
+    }
+
+    const apiKey = "47DK7JBNEQ26XE2C5YRJPM2L3"; // Replace with your valid API key
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${apiKey}&include=current`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const temperature = data.currentConditions.temp;
+        document.getElementById("weather").value = `${temperature}°C`;
+      })
+      .catch(error => {
+        console.error("Error fetching weather:", error);
+        alert("Could not fetch weather data. Please check your API key and location.");
+      });
+  }
+</script>
+
+</body>
+</html>
